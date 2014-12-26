@@ -22,6 +22,9 @@ static NSString const *kRCDMainManagedObjectContext;
 // sends the NSManagedObjectContextDidSaveNotification notification when the context is saved
 @property (readonly, nonatomic) RACSignal *rcd_saved;
 
+// sends the NSManagedObjectContextObjectsDidChanged notification when the context is saved
+@property (readonly, nonatomic) RACSignal *rcd_changed;
+
 // Returns a signal that sends result of executing a fetch request (or sends error)
 - (RACSignal *)executeRequest:(NSFetchRequest *)request;
 

@@ -105,10 +105,19 @@ static NSString const *kRCDMainManagedObjectContext = @"kRCDMainManagedObjectCon
 {
     RACSignal *saved = objc_getAssociatedObject(self, _cmd);
     if (!saved) {
-        saved = [[NSNotificationCenter defaultCenter] rac_addObserverForName:NSManagedObjectContextDidSaveNotification object:self];
+        saved = [[[NSNotificationCenter defaultCenter] rac_addObserverForName:NSManagedObjectContextDidSaveNotification object:self] takeUntil:self.rac_willDeallocSignal];
         objc_setAssociatedObject(self, _cmd, saved, OBJC_ASSOCIATION_RETAIN);
     }
     return saved;
+}
+
+-(RACSignal *)rcd_changed{
+    RACSignal *changed = objc_getAssociatedObject(self, _cmd);
+    if (!changed) {
+        changed = [[[NSNotificationCenter defaultCenter] rac_addObserverForName:NSManagedObjectContextObjectsDidChangeNotification object:self] takeUntil:self.rac_willDeallocSignal];
+        objc_setAssociatedObject(self, _cmd, changed, OBJC_ASSOCIATION_RETAIN);
+    }
+    return changed;
 }
 
 - (NSManagedObjectContext *)mainContext
